@@ -1,9 +1,3 @@
-/******************************************************/
-//       THIS IS A GENERATED FILE - DO NOT EDIT       //
-/******************************************************/
-
-#include "Particle.h"
-#line 1 "/home/kevin/Documents/GitHub/KeyboardFeatherwingInterruptDriven/src/KeyboardFeatherwingInterruptDriven.ino"
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_ILI9341.h>
@@ -18,10 +12,6 @@
 // #define NEOPIXEL_PIN 11
 
 // Particle Argon references
-void KeyIsr(void);
-void setup();
-void loop();
-#line 15 "/home/kevin/Documents/GitHub/KeyboardFeatherwingInterruptDriven/src/KeyboardFeatherwingInterruptDriven.ino"
 #define TFT_CS D4
 #define TFT_DC D5
 #define STMPE_CS D3
@@ -69,11 +59,11 @@ void setup() {
   ts.writeRegister8(STMPE_GPIO_ALT_FUNCT, _BV(2));  // Set pin 2 to GPIO
   ts.writeRegister8(0x16, _BV(2)); // Pin 2 falling edge detection enable
 
-  // ts.writeRegister8(STMPE_INT_EN, STMPE_INT_EN_TOUCHDET | STMPE_INT_EN_GPIO); // Interrupts for screen and GPIO
-  ts.writeRegister8(STMPE_INT_EN, STMPE_INT_EN_GPIO); // Interrupts for GPIO only
+  ts.writeRegister8(STMPE_INT_EN, STMPE_INT_EN_TOUCHDET | STMPE_INT_EN_GPIO); // Interrupts for screen and GPIO
+  // ts.writeRegister8(STMPE_INT_EN, STMPE_INT_EN_GPIO); // Interrupts for GPIO only
   ts.writeRegister8(0x0C, 1 << 2); // Pin 2 GPIO interrupt enable
   
-  pinMode(D8, INPUT_PULLDOWN);
+  pinMode(interruptPin, INPUT_PULLDOWN);
   attachInterrupt(interruptPin, KeyIsr, RISING);
 }
 
@@ -98,7 +88,7 @@ void loop() {
     const BBQ10Keyboard::KeyEvent key = keyboard.keyEvent();
     if (key.state == BBQ10Keyboard::StateRelease) {
       pixels.setPixelColor(0, pixels.Color(0, 255, 0));
-      pixels.show(); 
+      pixels.show();
     
       tft.print(key.key);
       
